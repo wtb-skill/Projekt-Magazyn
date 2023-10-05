@@ -130,9 +130,11 @@ def show_revenue():
 
     :return:
     """
-    print(f"Cost: {get_costs()}")
-    print(f"Income: {get_income()}")
-    print(f"Revenue: {get_income() - get_costs()}")
+    print("Revenue breakdown (PLN):")
+    print(f"{'Income':<10}: {get_income():>10.2f}")
+    print(f"{'Cost':<10}: {get_costs():>10.2f}")
+    print("-" * 22)
+    print(f"{'Revenue':<10}: {get_income() - get_costs():>10.2f}")
 
 
 
