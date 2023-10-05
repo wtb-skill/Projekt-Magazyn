@@ -4,19 +4,19 @@ items = [
         'Name': 'Milk',
         'Quantity': 120,
         'Unit': 'l',
-        'Unit Price': 2.3
+        'Unit Price': 2.3,
     },
 {
         'Name': 'Sugar',
         'Quantity': 1000,
         'Unit': 'kg',
-        'Unit Price': 3
+        'Unit Price': 3,
     },
 {
         'Name': 'Flour',
         'Quantity': 12000,
         'Unit': 'kg',
-        'Unit Price': 1.2
+        'Unit Price': 1.2,
     }
 ]
 
@@ -29,16 +29,36 @@ def menu():
             break
         elif user_input == 'show':
             get_items()
+        elif user_input == 'add':
+            add_item()
 
 
 def get_items():
-    table_header = f"{'l.p.':<5} {'Name':<10} {'Quantity':<10} {'Unit':<5} {'Unit Price':<10}\n" \
-                   f"{'-'*5} {'-'*10} {'-'*10} {'-'*5} {'-'*10}"
+    table_header = f"{'l.p.':<5} {'Name':<10} {'Quantity':<10} {'Unit':<8} {'Unit Price (PLN)':<10}\n" \
+                   f"{'-'*5} {'-'*10} {'-'*10} {'-'*8} {'-'*10}"
 
     print(table_header)
 
     for i, item in enumerate(items, start=1):
-        print(f"{i:<5} {item['Name']:<10} {item['Quantity']:<10} {item['Unit']:<5} {item['Unit Price']:<10.2f}")
+        print(f"{i:<5} {item['Name']:<10} {item['Quantity']:<10} {item['Unit']:<8} {item['Unit Price']:<10.2f}")
+
+
+# def add_item(name: str, quantity: float, unit_name: str, unit_price: float):
+def add_item():
+    print("Adding an item to the warehouse...")
+    item_name = input("Item name: ")
+    item_quantity = int(input("Item quantity: "))
+    item_unit = input("Item unit of measure: ")
+    item_price = float(input("Item price in PLN: "))
+    new_item = {
+        'Name': item_name,
+        'Quantity': item_quantity,
+        'Unit': item_unit,
+        'Unit Price': item_price,
+    }
+    items.append(new_item)
+    print("New item added!")
+
 
 
 if __name__ == "__main__":
