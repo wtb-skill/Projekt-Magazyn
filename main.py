@@ -31,6 +31,9 @@ def menu():
             get_items()
         elif user_input == 'add':
             add_item()
+        elif user_input == 'sell':
+            sell_item()
+
 
 
 def get_items():
@@ -58,6 +61,22 @@ def add_item():
     }
     items.append(new_item)
     print("New item added!")
+
+
+def sell_item():
+    print("Selling an item...")
+    item_name = input("Item name: ")
+    item_quantity = int(input("Quantity to sell: "))
+    flag = True  # if item was not found inform the user
+    for item in items:
+        if item['Name'] == item_name:
+            item['Quantity'] -= item_quantity
+            print(f"Successfully sold {item_quantity} {item['Unit']} of {item_name}.")
+            print("Displaying the current warehouse status...")
+            get_items()
+            flag = False
+    if flag:
+        print(f"{item_name} was not found. Aborting...")
 
 
 
