@@ -20,6 +20,8 @@ items = [
     }
 ]
 
+sold_items = []
+
 
 def menu():
     while True:
@@ -33,7 +35,8 @@ def menu():
             add_item()
         elif user_input == 'sell':
             sell_item()
-
+        elif user_input == 'show_revenue':
+            show_revenue()
 
 
 def get_items():
@@ -75,8 +78,61 @@ def sell_item():
             print("Displaying the current warehouse status...")
             get_items()
             flag = False
+            update_sold_items(name=item_name, quantity=item_quantity, unit_name=item['Unit'],
+                              unit_price=item['Unit Price'])
     if flag:
         print(f"{item_name} was not found. Aborting...")
+
+
+def update_sold_items(name: str, quantity: float, unit_name: str, unit_price: float) -> None:
+    """
+    Add note to sold_items list about selling an item.
+
+    :param name:
+    :param quantity:
+    :param unit_name:
+    :param unit_price:
+    :return:
+    """
+    sold_item = {
+        'Name': name,
+        'Quantity': quantity,
+        'Unit': unit_name,
+        'Unit Price': unit_price,
+    }
+    sold_items.append(sold_item)
+
+
+def get_costs():
+    """
+    Będzie zliczać wartość przedmiotów aktualnie znajdujących się w magazynie (na liście items).
+
+    :return:
+    """
+    cost = sum(item['Quantity'] * item['Unit Price'] for item in items)
+    return cost
+
+
+def get_income():
+    """
+    będzie w analogiczny sposób zliczać wartość sprzedanych przedmiotów z listy sold_items.
+
+    :return:
+    """
+    income = sum(item['Quantity'] * item['Unit Price'] for item in sold_items)
+    return income
+
+
+def show_revenue():
+    """
+    wyświetli przychody (policzone przez get_income), koszty (policzone przez get_costs) i zarobek,
+    czyli różnicę między przychodem a kosztami.
+
+    :return:
+    """
+    print(f"Cost: {get_costs()}")
+    print(f"Income: {get_income()}")
+    print(f"Revenue: {get_income() - get_costs()}")
 
 
 
