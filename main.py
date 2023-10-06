@@ -89,7 +89,7 @@ def add_item():
 
 def sell_item():
     print("Selling an item...")
-    item_name = input("Item name: ").lower()
+    item_name = input("Item name: ").capitalize()
     item_quantity = int(input("Quantity to sell: "))
     flag = True  # if item was not found inform the user
     for item in items:
@@ -159,7 +159,7 @@ def show_revenue():
 
 
 def export_items_to_csv(warehouse_csv=WAREHOUSE_CSV):
-    print("Saving...")
+    print(f"Saving warehouse data to {warehouse_csv}")
     with open(warehouse_csv, 'w', newline='') as csvfile:
         fieldnames = ['Name', 'Quantity', 'Unit', 'Unit Price']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames, dialect='excel')
@@ -176,6 +176,8 @@ def export_items_to_csv(warehouse_csv=WAREHOUSE_CSV):
 
 
 def export_sales_to_csv(sales_csv=SALES_CSV):
+    print(f"Saving sales data to {sales_csv}")
+
     with open(sales_csv, 'w', newline='') as csvfile:
         fieldnames = ['Name', 'Quantity', 'Unit', 'Unit Price']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames, dialect='excel')
@@ -188,10 +190,12 @@ def export_sales_to_csv(sales_csv=SALES_CSV):
                 'Unit': item['Unit'],
                 'Unit Price': item['Unit Price'],
             })
+    print("Done!")
 
 
-def load_items_from_csv(warehouse_csv=WAREHOUSE_CSV, sales_csv=SALES_CSV):
+def load_items_from_csv(warehouse_csv=WAREHOUSE_CSV):
     items.clear()
+    print(f"Loading warehouse data from {warehouse_csv}.")
 
     with open(warehouse_csv, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
@@ -202,10 +206,12 @@ def load_items_from_csv(warehouse_csv=WAREHOUSE_CSV, sales_csv=SALES_CSV):
                 'Unit': row['Unit'],
                 'Unit Price': float(row['Unit Price']),
                 })
+    print("Done!")
 
 
 def load_sales_from_csv(sales_csv=SALES_CSV):
     sold_items.clear()
+    print(f"Loading sales data from {sales_csv}.")
 
     with open(sales_csv, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
@@ -216,9 +222,11 @@ def load_sales_from_csv(sales_csv=SALES_CSV):
                 'Unit': row['Unit'],
                 'Unit Price': float(row['Unit Price']),
                 })
+    print("Done!")
 
 
 if __name__ == "__main__":
+
     print("For help, enter 'help'.")
     menu()
 
