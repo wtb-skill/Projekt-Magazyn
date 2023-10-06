@@ -1,3 +1,8 @@
+import csv
+import sys
+
+WAREHOUSE_CSV = 'warehouse.csv'
+SALES_CSV = 'sales.csv'
 
 items = [
     {
@@ -26,33 +31,49 @@ sold_items = []
 def menu():
     while True:
         user_input = input("What would you like to do?: ")
+        user_input = user_input.lower()
 
         if user_input == 'exit':
             break
+        elif user_input == 'help':
+            menu_help()
         elif user_input == 'show':
             get_items()
         elif user_input == 'add':
             add_item()
         elif user_input == 'sell':
             sell_item()
-        elif user_input == 'show_revenue':
+        elif user_input == 'revenue':
             show_revenue()
+        elif user_input == 'save':
+            export_items_to_csv()
+            export_sales_to_csv()
+        elif user_input == 'load':
+            load_items_from_csv()
+            load_sales_from_csv()
+        else:
+            print("Wrong command.")
+
+
+def menu_help():
+    commands = ['exit', 'help', 'show', 'add', 'sell', 'revenue', 'save', 'load']
+    print(f"Command list: {sorted(commands)}")
 
 
 def get_items():
-    table_header = f"{'l.p.':<5} {'Name':<10} {'Quantity':<10} {'Unit':<8} {'Unit Price (PLN)':<10}\n" \
-                   f"{'-'*5} {'-'*10} {'-'*10} {'-'*8} {'-'*10}"
+    table_header = f"{'l.p.':<5} {'Name':<10} {'Quantity':>10} {'Unit':>8} {'Unit Price (PLN)':>10}\n" \
+                   f"{'-'*5} {'-'*10} {'-'*10} {'-'*8} {'-'*16}"
 
     print(table_header)
 
     for i, item in enumerate(items, start=1):
-        print(f"{i:<5} {item['Name']:<10} {item['Quantity']:<10} {item['Unit']:<8} {item['Unit Price']:<10.2f}")
+        print(f"{i:<5} {item['Name']:<10} {item['Quantity']:>10} {item['Unit']:>8} {item['Unit Price']:>10.2f}")
 
 
 # def add_item(name: str, quantity: float, unit_name: str, unit_price: float):
 def add_item():
     print("Adding an item to the warehouse...")
-    item_name = input("Item name: ")
+    item_name = input("Item name: ").capitalize()
     item_quantity = int(input("Item quantity: "))
     item_unit = input("Item unit of measure: ")
     item_price = float(input("Item price in PLN: "))
@@ -68,7 +89,7 @@ def add_item():
 
 def sell_item():
     print("Selling an item...")
-    item_name = input("Item name: ")
+    item_name = input("Item name: ").lower()
     item_quantity = int(input("Quantity to sell: "))
     flag = True  # if item was not found inform the user
     for item in items:
@@ -137,7 +158,68 @@ def show_revenue():
     print(f"{'Revenue':<10}: {get_income() - get_costs():>10.2f}")
 
 
+def export_items_to_csv(warehouse_csv=WAREHOUSE_CSV):
+    print("Saving...")
+    with open(warehouse_csv, 'w', newline='') as csvfile:
+        fieldnames = ['Name', 'Quantity', 'Unit', 'Unit Price']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames, dialect='excel')
+
+        writer.writeheader()
+        for item in items:
+            writer.writerow({
+                'Name': item['Name'],
+                'Quantity': item['Quantity'],
+                'Unit': item['Unit'],
+                'Unit Price': item['Unit Price'],
+            })
+    print("Done!")
+
+
+def export_sales_to_csv(sales_csv=SALES_CSV):
+    with open(sales_csv, 'w', newline='') as csvfile:
+        fieldnames = ['Name', 'Quantity', 'Unit', 'Unit Price']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames, dialect='excel')
+
+        writer.writeheader()
+        for item in sold_items:
+            writer.writerow({
+                'Name': item['Name'],
+                'Quantity': item['Quantity'],
+                'Unit': item['Unit'],
+                'Unit Price': item['Unit Price'],
+            })
+
+
+def load_items_from_csv(warehouse_csv=WAREHOUSE_CSV, sales_csv=SALES_CSV):
+    items.clear()
+
+    with open(warehouse_csv, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            items.append({
+                'Name': row['Name'],
+                'Quantity': int(row['Quantity']),
+                'Unit': row['Unit'],
+                'Unit Price': float(row['Unit Price']),
+                })
+
+
+def load_sales_from_csv(sales_csv=SALES_CSV):
+    sold_items.clear()
+
+    with open(sales_csv, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            sold_items.append({
+                'Name': row['Name'],
+                'Quantity': int(row['Quantity']),
+                'Unit': row['Unit'],
+                'Unit Price': float(row['Unit Price']),
+                })
+
 
 if __name__ == "__main__":
+    print("For help, enter 'help'.")
     menu()
+
 
