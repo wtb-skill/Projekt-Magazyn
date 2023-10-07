@@ -1,23 +1,24 @@
 import csv
 import sys
+from typing import List, Dict, Union
 
-WAREHOUSE_CSV = 'warehouse.csv'
-SALES_CSV = 'sales.csv'
+WAREHOUSE_CSV: str = 'warehouse.csv'
+SALES_CSV: str = 'sales.csv'
 
-items = [
+items: List[Dict[str, Union[str, int, float]]] = [
     {
         'Name': 'Milk',
         'Quantity': 120,
         'Unit': 'l',
         'Unit Price': 2.3,
     },
-{
+    {
         'Name': 'Sugar',
         'Quantity': 1000,
         'Unit': 'kg',
         'Unit Price': 3,
     },
-{
+    {
         'Name': 'Flour',
         'Quantity': 12000,
         'Unit': 'kg',
@@ -28,7 +29,14 @@ items = [
 sold_items = []
 
 
-def menu():
+def menu() -> None:
+    """
+    Allows the user to input commands for warehouse management.
+
+    :return: None
+    """
+    print("For help, enter 'help'.")
+
     while True:
         user_input = input("What would you like to do?: ")
         user_input = user_input.lower()
@@ -55,12 +63,22 @@ def menu():
             print("Wrong command.")
 
 
-def menu_help():
+def menu_help() -> None:
+    """
+    Prints the available commands in alphabetical order.
+
+    :return: None
+    """
     commands = ['exit', 'help', 'show', 'add', 'sell', 'revenue', 'save', 'load']
     print(f"Command list: {sorted(commands)}")
 
 
-def get_items():
+def get_items() -> None:
+    """
+    Prints table for the user containing information about items in stock.
+
+    :return: None
+    """
     table_header = f"{'l.p.':<5} {'Name':<10} {'Quantity':>10} {'Unit':>8} {'Unit Price (PLN)':>10}\n" \
                    f"{'-'*5} {'-'*10} {'-'*10} {'-'*8} {'-'*16}"
 
@@ -70,8 +88,12 @@ def get_items():
         print(f"{i:<5} {item['Name']:<10} {item['Quantity']:>10} {item['Unit']:>8} {item['Unit Price']:>10.2f}")
 
 
-# def add_item(name: str, quantity: float, unit_name: str, unit_price: float):
-def add_item():
+def add_item() -> None:
+    """
+    Takes input about the new item and adds it to the warehouse.
+
+    :return: None
+    """
     print("Adding an item to the warehouse...")
     item_name = input("Item name: ").capitalize()
     item_quantity = int(input("Item quantity: "))
@@ -87,7 +109,12 @@ def add_item():
     print("New item added!")
 
 
-def sell_item():
+def sell_item() -> None:
+    """
+    Takes input about the item being sold and adds it to the list of sold items.
+
+    :return: None
+    """
     print("Selling an item...")
     item_name = input("Item name: ").capitalize()
     item_quantity = int(input("Quantity to sell: "))
@@ -107,13 +134,13 @@ def sell_item():
 
 def update_sold_items(name: str, quantity: float, unit_name: str, unit_price: float) -> None:
     """
-    Add note to sold_items list about selling an item.
+    Adds the sold item to the list of sold items.
 
-    :param name:
-    :param quantity:
-    :param unit_name:
-    :param unit_price:
-    :return:
+    :param name: item name
+    :param quantity: item quantity
+    :param unit_name: item measurement unit
+    :param unit_price: item price per one unit of measurement
+    :return: None
     """
     sold_item = {
         'Name': name,
@@ -124,32 +151,31 @@ def update_sold_items(name: str, quantity: float, unit_name: str, unit_price: fl
     sold_items.append(sold_item)
 
 
-def get_costs():
+def get_costs() -> float:
     """
-    Będzie zliczać wartość przedmiotów aktualnie znajdujących się w magazynie (na liście items).
+    Sums up the price of all available items in stock.
 
-    :return:
+    :return: the price of all available items in stock
     """
     cost = sum(item['Quantity'] * item['Unit Price'] for item in items)
     return cost
 
 
-def get_income():
+def get_income() -> float:
     """
-    będzie w analogiczny sposób zliczać wartość sprzedanych przedmiotów z listy sold_items.
+    Sums up the price of all sold items.
 
-    :return:
+    :return: the price of all sold items
     """
     income = sum(item['Quantity'] * item['Unit Price'] for item in sold_items)
     return income
 
 
-def show_revenue():
+def show_revenue() -> None:
     """
-    wyświetli przychody (policzone przez get_income), koszty (policzone przez get_costs) i zarobek,
-    czyli różnicę między przychodem a kosztami.
+    Prints the income, cost and revenue.
 
-    :return:
+    :return: None
     """
     print("Revenue breakdown (PLN):")
     print(f"{'Income':<10}: {get_income():>10.2f}")
@@ -158,7 +184,13 @@ def show_revenue():
     print(f"{'Revenue':<10}: {get_income() - get_costs():>10.2f}")
 
 
-def export_items_to_csv(warehouse_csv=WAREHOUSE_CSV):
+def export_items_to_csv(warehouse_csv: str = WAREHOUSE_CSV) -> None:
+    """
+    Export warehouse data to a CSV file.
+
+    :param warehouse_csv: The path to the CSV file where the items will be exported. Defaults to 'warehouse.csv'.
+    :return: None
+    """
     print(f"Saving warehouse data to {warehouse_csv}")
     with open(warehouse_csv, 'w', newline='') as csvfile:
         fieldnames = ['Name', 'Quantity', 'Unit', 'Unit Price']
@@ -175,7 +207,13 @@ def export_items_to_csv(warehouse_csv=WAREHOUSE_CSV):
     print("Done!")
 
 
-def export_sales_to_csv(sales_csv=SALES_CSV):
+def export_sales_to_csv(sales_csv: str = SALES_CSV) -> None:
+    """
+    Export sold items data to a CSV file.
+
+    :param sales_csv: The path to the CSV file where the items will be exported. Defaults to 'sales.csv'.
+    :return: None
+    """
     print(f"Saving sales data to {sales_csv}")
 
     with open(sales_csv, 'w', newline='') as csvfile:
@@ -193,7 +231,13 @@ def export_sales_to_csv(sales_csv=SALES_CSV):
     print("Done!")
 
 
-def load_items_from_csv(warehouse_csv=WAREHOUSE_CSV):
+def load_items_from_csv(warehouse_csv: str = WAREHOUSE_CSV) -> None:
+    """
+    Import warehouse data from a CSV file.
+
+    :param warehouse_csv: The path to the CSV file from which the items will be imported. Defaults to 'warehouse.csv'.
+    :return: None
+    """
     items.clear()
     print(f"Loading warehouse data from {warehouse_csv}.")
 
@@ -209,7 +253,13 @@ def load_items_from_csv(warehouse_csv=WAREHOUSE_CSV):
     print("Done!")
 
 
-def load_sales_from_csv(sales_csv=SALES_CSV):
+def load_sales_from_csv(sales_csv: str = SALES_CSV) -> None:
+    """
+    Import sold items data from a CSV file.
+
+    :param sales_csv: The path to the CSV from which the items will be imported. Defaults to 'sales.csv'.
+    :return: None
+    """
     sold_items.clear()
     print(f"Loading sales data from {sales_csv}.")
 
@@ -225,9 +275,26 @@ def load_sales_from_csv(sales_csv=SALES_CSV):
     print("Done!")
 
 
-if __name__ == "__main__":
+def startup() -> None:
+    """
+    Initialize the application by loading warehouse and sold items data from their CSV files.
 
-    print("For help, enter 'help'.")
+    This function can accept command-line arguments to specify custom CSV file paths for warehouse
+    and sales data.
+
+    :return: None
+    """
+    global WAREHOUSE_CSV, SALES_CSV
+    if len(sys.argv) > 1:  # at startup allow loading from user files
+        print("Command-line arguments detected. Loading custom CSV file paths...")
+        WAREHOUSE_CSV = sys.argv[1]
+        SALES_CSV = sys.argv[2]
+    load_items_from_csv()
+    load_sales_from_csv()
+
+
+if __name__ == "__main__":
+    startup()
     menu()
 
 
